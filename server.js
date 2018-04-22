@@ -10,6 +10,7 @@ const { mongoose } = require('./db/mongoose');
 
 // bring in the models
 const { Todo } = require('./models/todo');
+const { User } = require('./models/user');
 
 // intialize express
 const app = express();
@@ -133,6 +134,32 @@ app.delete('/todos/:id', (req, res) => {
 // --------------------------------
 // --------- User Routes ----------
 // --------------------------------
+
+// POST /users
+app.post('/users', (req, res) => {
+	const pick = ({ email, password }) => ({ email, password });
+	const body = pick(req.body);
+
+	const user = new User(body);
+
+	user
+		.save()
+		.then(user => {
+			return user.generateAuthToken();
+		})
+		.then(token => {
+			res
+				.status(200)
+				.header('x-auth', token)
+				.send(user);
+		})
+		.catch(err => {
+			res.status(400).send(err);
+		});
+});
+
+// POST users/login
+app.post('users/login', (req, res) => {});
 
 // start server
 app.listen(port, () => {
