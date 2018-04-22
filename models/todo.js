@@ -20,10 +20,10 @@ const todoSchema = new Schema({
 		default: Date.now(),
 		required: true,
 	},
-	// _author: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	required: true,
-	// },
+	_author: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+	},
 });
 
 // create model from schema

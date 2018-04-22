@@ -28,11 +28,12 @@ const { authenticate } = require('./middleware/authenticate');
 // --------------------------------
 
 // POST /todos
-app.post('/todos', (req, res) => {
+app.post('/todos', authenticate, (req, res) => {
 	const pick = ({ text, completed, createdAt }) => ({
 		text,
 		completed,
 		createdAt,
+		_author: req.user._id,
 	});
 
 	const body = pick(req.body);
@@ -53,8 +54,8 @@ app.post('/todos', (req, res) => {
 });
 
 // GET /todos
-app.get('/todos', (req, res) => {
-	Todo.find({})
+app.get('/todos', authenticate, (req, res) => {
+	Todo.find({ _author: req.user._id })
 		.then(todos => {
 			res.status(200).send(todos);
 		})
@@ -64,14 +65,14 @@ app.get('/todos', (req, res) => {
 });
 
 // GET /todos/:id
-app.get('/todos/:id', (req, res) => {
+app.get('/todos/:id', authenticate, (req, res) => {
 	const id = req.params.id;
 
 	if (!ObjectId.isValid(id)) {
 		return res.status(404).send();
 	}
 
-	Todo.findOne({ _id: id })
+	Todo.findOne({ _id: id, _author: req.user._id })
 		.then(todo => {
 			if (!todo) {
 				return res.status(404).send();
@@ -85,7 +86,7 @@ app.get('/todos/:id', (req, res) => {
 });
 
 // PATCH /todos/:id
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
 	const id = req.params.id;
 
 	const pick = ({ text, completed, createdAt }) => ({
@@ -100,7 +101,11 @@ app.patch('/todos/:id', (req, res) => {
 		return res.status(404).send();
 	}
 
-	Todo.findOneAndUpdate({ _id: id }, { $set: body }, { new: true })
+	Todo.findOneAndUpdate(
+		{ _id: id, _author: req.user._id },
+		{ $set: body },
+		{ new: true },
+	)
 		.then(todo => {
 			if (!todo) {
 				return res.status(404).send();
@@ -113,14 +118,14 @@ app.patch('/todos/:id', (req, res) => {
 });
 
 // DELETE /todos
-app.delete('/todos/:id', (req, res) => {
+app.delete('/todos/:id', authenticate, (req, res) => {
 	const id = req.params.id;
 
 	if (!ObjectId.isValid(id)) {
 		return res.status(404).send();
 	}
 
-	Todo.findOneAndRemove({ _id: id })
+	Todo.findOneAndRemove({ _id: id, _author: req.user._id })
 		.then(todo => {
 			if (!todo) {
 				return res.status(404).send();
