@@ -159,7 +159,23 @@ app.post('/users', (req, res) => {
 });
 
 // POST users/login
-app.post('users/login', (req, res) => {});
+app.post('/users/login', (req, res) => {
+	const pick = ({ email, password }) => ({ email, password });
+	const body = pick(req.body);
+
+	User.findByCredentials(body.email, body.password)
+		.then(user => {
+			return user.generateAuthToken().then(token => {
+				res
+					.status(200)
+					.header('x-auth', token)
+					.send(user);
+			});
+		})
+		.catch(err => {
+			res.status(400).send();
+		});
+});
 
 // start server
 app.listen(port, () => {

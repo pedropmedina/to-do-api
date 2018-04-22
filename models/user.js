@@ -66,6 +66,26 @@ userSchema.methods.generateAuthToken = function() {
 };
 
 // -------------------------------------------
+// ----------- Custom Model Methods ----------
+// -------------------------------------------
+userSchema.statics.findByCredentials = function(email, password) {
+	const User = this;
+
+	return User.findOne({ email }).then(user => {
+		if (!user) {
+			return Promise.reject();
+		}
+
+		return bcrypt.compare(password, user.password).then(res => {
+			if (res !== true) {
+				return Promise.reject();
+			}
+			return user;
+		});
+	});
+};
+
+// -------------------------------------------
 // ---------- Mongoose Middleware ------------
 // -------------------------------------------
 
