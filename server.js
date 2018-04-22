@@ -178,6 +178,11 @@ app.post('/users/login', (req, res) => {
 		});
 });
 
+// GET /users/me
+app.get('/users/me', authenticate, (req, res) => {
+	res.send(req.user);
+});
+
 // DELETE /users/me/token --> use when loggin out
 app.delete('/users/me/token', authenticate, (req, res) => {
 	req.user
