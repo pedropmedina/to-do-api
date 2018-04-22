@@ -21,6 +21,7 @@ const port = process.env.PORT;
 // middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+const { authenticate } = require('./middleware/authenticate');
 
 // --------------------------------
 // --------- Todo Routes ----------
@@ -165,12 +166,24 @@ app.post('/users/login', (req, res) => {
 
 	User.findByCredentials(body.email, body.password)
 		.then(user => {
-			return user.generateAuthToken().then(token => {
+			user.generateAuthToken().then(token => {
 				res
 					.status(200)
 					.header('x-auth', token)
 					.send(user);
 			});
+		})
+		.catch(err => {
+			res.status(400).send();
+		});
+});
+
+// DELETE /users/me/token --> use when loggin out
+app.delete('/users/me/token', authenticate, (req, res) => {
+	req.user
+		.removeToken(req.token)
+		.then(() => {
+			res.status(200).send();
 		})
 		.catch(err => {
 			res.status(400).send();

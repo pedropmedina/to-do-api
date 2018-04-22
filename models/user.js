@@ -65,6 +65,19 @@ userSchema.methods.generateAuthToken = function() {
 	return user.save().then(() => token);
 };
 
+// remove token
+userSchema.methods.removeToken = function(token) {
+	const user = this;
+
+	return user.update({
+		$pull: {
+			tokens: {
+				token,
+			},
+		},
+	});
+};
+
 // -------------------------------------------
 // ----------- Custom Model Methods ----------
 // -------------------------------------------
@@ -82,6 +95,23 @@ userSchema.statics.findByCredentials = function(email, password) {
 			}
 			return user;
 		});
+	});
+};
+
+userSchema.statics.findByToken = function(token) {
+	const User = this;
+	let decoded;
+
+	try {
+		decoded = jwt.verify(token, process.env.JWT_SECRET);
+	} catch (err) {
+		return Promise.reject();
+	}
+
+	return User.findOne({
+		_id: decoded._id,
+		'tokens.access': 'auth',
+		'tokens.token': token,
 	});
 };
 
