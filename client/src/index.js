@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import AppRouter from './routes/AppRouter';
 import registerServiceWorker from './registerServiceWorker';
 import { injectGlobal } from 'styled-components';
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore';
 
 injectGlobal`
 	html {
@@ -24,5 +26,17 @@ injectGlobal`
 	}
 `;
 
-ReactDOM.render(<AppRouter />, document.getElementById('root'));
+// instantiate store
+const store = configureStore();
+
+const state = store.getState();
+console.log(state);
+
+const jxs = (
+	<Provider store={store}>
+		<AppRouter />
+	</Provider>
+);
+
+ReactDOM.render(jxs, document.getElementById('root'));
 registerServiceWorker();

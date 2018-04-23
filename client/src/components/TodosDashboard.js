@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import TopBar from './TopBar';
 
 class TodosDashboard extends Component {
 	render() {
-		return <div>Hello there!</div>;
+		console.log(this.props.todos);
+		return (
+			<div>
+				<TopBar />
+			</div>
+		);
 	}
 }
 
-export default TodosDashboard;
+const mapStateToProps = state => {
+	return {
+		todos: state,
+	};
+};
+
+export default connect(mapStateToProps)(TodosDashboard);

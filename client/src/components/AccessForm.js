@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { setTodos } from '../actions/todo';
 
 const Form = styled.form`
 	width: 40rem;
@@ -98,10 +100,22 @@ class AccessForm extends React.Component {
 			},
 		})
 			.then(res => {
-				return res.json();
+				return res.headers.get('x-auth');
 			})
-			.then(user => {
-				console.log(user);
+			.then(token => {
+				fetch('/todos', {
+					method: 'GET',
+					headers: new Headers({
+						'x-auth': token,
+					}),
+				})
+					.then(res => {
+						return res.json();
+					})
+					.then(todos => {
+						this.props.dispatch(setTodos(todos));
+					})
+					.catch(err => console.log(err));
 			})
 			.catch(err => {
 				console.log(err);
@@ -144,4 +158,4 @@ class AccessForm extends React.Component {
 	}
 }
 
-export default AccessForm;
+export default connect()(AccessForm);
