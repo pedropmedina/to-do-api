@@ -188,7 +188,7 @@ app.get('/users/me', authenticate, (req, res) => {
 	res.send(req.user);
 });
 
-// DELETE /users/me/token --> use when loggin out
+// DELETE /users/me/token --> use when logging out
 app.delete('/users/me/token', authenticate, (req, res) => {
 	req.user
 		.removeToken(req.token)

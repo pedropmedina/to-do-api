@@ -35,7 +35,7 @@ const userSchema = new Schema({
 });
 
 // -------------------------------------------
-// -------------- Built-in methods------------
+// ------ Modified Built-in methods ----------
 // -------------------------------------------
 
 // send to client just the email and id
