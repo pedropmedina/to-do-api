@@ -15,7 +15,7 @@ const Ul = styled.ul`
 
 const TodoList = props => {
 	console.log('This are the todos: ', props.todos);
-	console.log('This are the tokens: ', props.token);
+
 	return (
 		<Wrapper>
 			<Ul>
@@ -36,8 +36,7 @@ const TodoList = props => {
 
 const mapStateToProps = state => {
 	return {
-		todos: state.todos,
-		token: state.token,
+		todos: state,
 	};
 };
 

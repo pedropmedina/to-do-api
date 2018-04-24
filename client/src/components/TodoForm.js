@@ -100,7 +100,7 @@ class TodoForm extends React.Component {
 			method: 'POST',
 			body: JSON.stringify(this.state.fields),
 			headers: new Headers({
-				'x-auth': this.props.token,
+				'x-auth': localStorage.getItem('token'),
 				'content-type': 'application/json',
 			}),
 		})
@@ -154,8 +154,4 @@ class TodoForm extends React.Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	token: state.token,
-});
-
-export default connect(mapStateToProps)(TodoForm);
+export default connect()(TodoForm);

@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setTodos } from '../actions/todo';
-import { addToken } from '../actions/token';
 
 const Form = styled.form`
 	width: 40rem;
@@ -78,22 +76,8 @@ class Login extends React.Component {
 				return res.headers.get('x-auth');
 			})
 			.then(token => {
-				this.props.dispatch(addToken(token));
-
-				fetch('/todos', {
-					method: 'GET',
-					headers: new Headers({
-						'x-auth': token,
-					}),
-				})
-					.then(res => {
-						return res.json();
-					})
-					.then(todos => {
-						this.props.dispatch(setTodos(todos));
-						this.props.history.push('/todosDashboard');
-					})
-					.catch(err => console.log(err));
+				localStorage.setItem('token', token);
+				this.props.history.push('/todosDashboard');
 			})
 			.catch(err => {
 				console.log(err);

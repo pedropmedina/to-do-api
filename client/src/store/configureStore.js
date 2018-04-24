@@ -1,13 +1,8 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore } from 'redux';
 import todoReducer from '../reducers/todo';
-import tokenReducer from '../reducers/token';
 
 export default () => {
-	const store = createStore(
-		combineReducers({
-			todos: todoReducer,
-			token: tokenReducer,
-		}),
-	);
+	const store = createStore(todoReducer);
+
 	return store;
 };

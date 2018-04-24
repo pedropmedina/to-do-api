@@ -29,9 +29,6 @@ injectGlobal`
 // invoke store
 const store = configureStore();
 
-const state = store.getState();
-console.log(state);
-
 const jxs = (
 	<Provider store={store}>
 		<AppRouter />
