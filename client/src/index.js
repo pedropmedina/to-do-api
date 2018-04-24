@@ -26,7 +26,7 @@ injectGlobal`
 	}
 `;
 
-// instantiate store
+// invoke store
 const store = configureStore();
 
 const state = store.getState();

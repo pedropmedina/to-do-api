@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setTodos } from '../actions/todo';
+import { addToken } from '../actions/token';
 
 const Form = styled.form`
 	width: 40rem;
@@ -21,30 +23,32 @@ const Form = styled.form`
 		text-indent: 1rem;
 	}
 
-	> div {
-		display: flex;
+	> button {
+		width: 100%;
+		margin: 0.5rem;
+		border: none;
+		font-size: 1.6rem;
+		text-transform: uppercase;
+		padding: 1.5rem;
+		color: #ffffff;
+		background-color: #3caf85;
+	}
 
-		> button {
-			flex: 1;
-			margin: 0.5rem;
-			border: none;
-			font-size: 1.6rem;
-			text-transform: uppercase;
-			padding: 1.5rem;
-			color: #ffffff;
-
-			&:first-child {
-				background-color: #3d69af;
-			}
-
-			&:last-child {
-				background-color: #3caf85;
-			}
-		}
+	> span {
+		display: inline-block;
+		padding: 1rem;
+		margin-top: 1rem;
+		font-size: 1.2rem;
+		color: #aaaaaa;
 	}
 `;
 
-class AccessForm extends React.Component {
+const CustomLink = styled(Link)`
+	text-decoration: none;
+	color: #3d69af;
+`;
+
+class Login extends React.Component {
 	state = {
 		fields: {
 			email: '',
@@ -58,35 +62,6 @@ class AccessForm extends React.Component {
 		const fields = { ...this.state.fields };
 		fields[name] = val;
 		this.setState(() => ({ fields }));
-	};
-
-	onSignUp = e => {
-		e.preventDefault();
-
-		fetch('/users', {
-			method: 'POST',
-			body: JSON.stringify(this.state.fields),
-			headers: {
-				'content-type': 'application/json',
-			},
-		})
-			.then(res => {
-				return res.json();
-			})
-			.then(user => {
-				console.log(user);
-			})
-			.catch(err => {
-				console.log(err);
-			});
-
-		const fields = {
-			email: '',
-			password: '',
-		};
-		this.setState(() => ({ fields }));
-
-		this.props.history.push('/todosDashboard');
 	};
 
 	onLogin = e => {
@@ -103,6 +78,8 @@ class AccessForm extends React.Component {
 				return res.headers.get('x-auth');
 			})
 			.then(token => {
+				this.props.dispatch(addToken(token));
+
 				fetch('/todos', {
 					method: 'GET',
 					headers: new Headers({
@@ -114,6 +91,7 @@ class AccessForm extends React.Component {
 					})
 					.then(todos => {
 						this.props.dispatch(setTodos(todos));
+						this.props.history.push('/todosDashboard');
 					})
 					.catch(err => console.log(err));
 			})
@@ -126,14 +104,12 @@ class AccessForm extends React.Component {
 			password: '',
 		};
 		this.setState(() => ({ fields }));
-
-		this.props.history.push('/todosDashboard');
 	};
 
 	render() {
 		return (
 			<React.Fragment>
-				<Form action="#">
+				<Form action="#" onSubmit={this.onLogin}>
 					<input
 						type="text"
 						name="email"
@@ -148,14 +124,15 @@ class AccessForm extends React.Component {
 						placeholder="password"
 						onChange={this.onChangeInput}
 					/>
-					<div>
-						<button onClick={this.onSignUp}>Sign up</button>
-						<button onClick={this.onLogin}>Login</button>
-					</div>
+					<button>Login</button>
+
+					<span>
+						Need an account? <CustomLink to="/">Sign up →</CustomLink>
+					</span>
 				</Form>
 			</React.Fragment>
 		);
 	}
 }
 
-export default connect()(AccessForm);
+export default connect()(Login);

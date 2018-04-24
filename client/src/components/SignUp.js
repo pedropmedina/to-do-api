@@ -1,0 +1,140 @@
+import React from 'react';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { setTodos } from '../actions/todo';
+import { addToken } from '../actions/token';
+import { Link } from 'react-router-dom';
+
+const Form = styled.form`
+	width: 40rem;
+	padding: 3rem 4rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+
+	> input {
+		display: block;
+		width: 100%;
+		margin-bottom: 2.5rem;
+		height: 5rem;
+		font-size: 1.6rem;
+		text-indent: 1rem;
+	}
+
+	> button {
+		width: 100%;
+		margin: 0.5rem;
+		border: none;
+		font-size: 1.6rem;
+		text-transform: uppercase;
+		padding: 1.5rem;
+		color: #ffffff;
+		background-color: #3d69af;
+	}
+
+	> span {
+		display: inline-block;
+		padding: 1rem;
+		margin-top: 1rem;
+		font-size: 1.2rem;
+		color: #aaaaaa;
+	}
+`;
+
+const CustomLink = styled(Link)`
+	text-decoration: none;
+	color: #3caf85;
+	padding: 0.5rem;
+`;
+
+class SignUp extends React.Component {
+	state = {
+		fields: {
+			email: '',
+			password: '',
+		},
+	};
+
+	onChangeInput = e => {
+		const name = e.target.name;
+		const val = e.target.value;
+		const fields = { ...this.state.fields };
+		fields[name] = val;
+		this.setState(() => ({ fields }));
+	};
+
+	onSignUp = e => {
+		e.preventDefault();
+
+		fetch('/users', {
+			method: 'POST',
+			body: JSON.stringify(this.state.fields),
+			headers: {
+				'content-type': 'application/json',
+			},
+		})
+			.then(res => {
+				return res.headers.get('x-auth');
+			})
+			.then(token => {
+				this.props.dispatch(addToken(token));
+
+				fetch('/todos', {
+					method: 'GET',
+					headers: new Headers({
+						'x-auth': token,
+					}),
+				})
+					.then(res => {
+						return res.json();
+					})
+					.then(todos => {
+						this.props.dispatch(setTodos(todos));
+						this.props.history.push('/todosDashboard');
+					})
+					.catch(err => console.log(err));
+			})
+			.catch(err => {
+				console.log(err);
+			});
+
+		const fields = {
+			email: '',
+			password: '',
+		};
+		this.setState(() => ({ fields }));
+	};
+
+	render() {
+		return (
+			<React.Fragment>
+				<Form action="#" onSubmit={this.onSignUp}>
+					<input
+						type="text"
+						name="email"
+						value={this.state.fields.email}
+						placeholder="email"
+						onChange={this.onChangeInput}
+					/>
+					<input
+						type="password"
+						name="password"
+						value={this.state.fields.password}
+						placeholder="password"
+						onChange={this.onChangeInput}
+					/>
+
+					<button>Sign up</button>
+
+					<span>
+						Have an account? <CustomLink to="/login">Login →</CustomLink>
+					</span>
+				</Form>
+			</React.Fragment>
+		);
+	}
+}
+
+export default connect()(SignUp);

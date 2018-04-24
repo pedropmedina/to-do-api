@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import TopBar from './TopBar';
+import TodoList from './TodoList';
+import TodoForm from './TodoForm';
 
 class TodosDashboard extends Component {
 	render() {
@@ -9,6 +11,8 @@ class TodosDashboard extends Component {
 		return (
 			<div>
 				<TopBar />
+				<TodoForm />
+				<TodoList />
 			</div>
 		);
 	}
@@ -16,7 +20,7 @@ class TodosDashboard extends Component {
 
 const mapStateToProps = state => {
 	return {
-		todos: state,
+		todos: state.todos,
 	};
 };
 
