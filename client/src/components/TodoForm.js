@@ -89,7 +89,7 @@ class TodoForm extends React.Component {
 		const name = e.target.name;
 		const val = e.target.value;
 		const fields = { ...this.state.fields };
-		fields[name] = e.target.value;
+		fields[name] = val;
 		this.setState(() => ({ fields }));
 	};
 
