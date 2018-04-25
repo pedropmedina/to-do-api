@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { addTodo } from '../actions/todo';
 
@@ -23,13 +23,66 @@ const Form = styled.form`
 			font-size: 1.6rem;
 			text-transform: uppercase;
 			text-align: center;
+			position: relative;
+
+			&::after {
+				content: '\\2713';
+				position: absolute;
+				right: -25%;
+				top: 0;
+				display: inline-block;
+				height: 100%;
+				width: 25%;
+				font-size: 2rem;
+				background-color: #aeaeae;
+				color: #fefefe;
+				padding: 1rem;
+				line-height: 2.2;
+				visibility: hidden;
+			}
 
 			&:first-child {
 				background-color: #cc1e38;
+				${props =>
+					!props.completed &&
+					css`
+						background-color: #962536;
+						color: #c1c1c1;
+						transform: scaleY(0.998);
+					`};
+
+				&::after {
+					${props =>
+						!props.completed &&
+						css`
+							background-color: #f99957;
+							color: #fefefe;
+							right: 0;
+							visibility: visible;
+						`};
+				}
 			}
 
 			&:last-child {
 				background-color: #13c66a;
+				${props =>
+					props.completed &&
+					css`
+						background-color: #1a8950;
+						color: #c1c1c1;
+						transform: scaleY(0.998);
+					`};
+
+				&::after {
+					${props =>
+						props.completed &&
+						css`
+							background-color: #f99957;
+							color: #fefefe;
+							right: 0;
+							visibility: visible;
+						`};
+				}
 			}
 
 			> input {
@@ -116,7 +169,15 @@ class TodoForm extends React.Component {
 
 	onChangeInput = e => {
 		const name = e.target.name;
-		const val = e.target.value;
+		let val = e.target.value;
+
+		// convert string to boolen for completed
+		if (val === 'true') {
+			val = true;
+		} else if (val === 'false') {
+			val = false;
+		}
+
 		const fields = { ...this.state.fields };
 		fields[name] = val;
 		this.setState(() => ({ fields }));
@@ -161,7 +222,11 @@ class TodoForm extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				<Form action="#" onSubmit={this.onSubmitForm}>
+				<Form
+					action="#"
+					onSubmit={this.onSubmitForm}
+					completed={this.state.fields.completed}
+				>
 					{this.state.errFields.text && <P>{this.state.errFields.text}</P>}
 					<input
 						type="text"
@@ -176,7 +241,7 @@ class TodoForm extends React.Component {
 							<input
 								type="radio"
 								name="completed"
-								value="false"
+								defaultValue="false"
 								checked={this.state.fields.completed === false}
 								onChange={this.onChangeInput}
 							/>
@@ -187,7 +252,7 @@ class TodoForm extends React.Component {
 							<input
 								type="radio"
 								name="completed"
-								value="true"
+								defaultValue="true"
 								checked={this.state.fields.completed === true}
 								onChange={this.onChangeInput}
 							/>
