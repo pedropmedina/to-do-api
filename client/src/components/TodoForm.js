@@ -24,6 +24,8 @@ const Form = styled.form`
 			text-transform: uppercase;
 			text-align: center;
 			position: relative;
+			user-select: none;
+			cursor: pointer;
 
 			&::after {
 				content: '\\2713';
@@ -111,14 +113,16 @@ const Form = styled.form`
 		width: 100%;
 		padding: 2rem;
 		border: none;
-		background-color: #eaeaea;
+		background-color: #cccccc;
 		border-radius: 0.4rem;
 		font-size: 1.6rem;
 		text-transform: uppercase;
 		color: #ffffff;
 		outline: none;
-		box-shadow: 0 0.5rem 0.7rem rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0.5rem 1.3rem rgba(0, 0, 0, 0.2);
 		transition: all 0.2s;
+		user-select: none;
+		cursor: pointer;
 
 		&:hover {
 			transform: translateY(-0.1rem);

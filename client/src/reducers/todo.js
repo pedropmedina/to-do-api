@@ -13,6 +13,10 @@ export default (state = todosReducerDefaultState, action) => {
 				}
 				return todo;
 			});
+		case 'DELETE_TODO':
+			return state.filter(todo => {
+				return todo._id !== action.id;
+			});
 		default:
 			return state;
 	}

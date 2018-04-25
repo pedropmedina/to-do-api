@@ -23,6 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const { authenticate } = require('./middleware/authenticate');
 
+// utils
+const { removeAuthor } = require('./utils/removeAuthor');
+
 // --------------------------------
 // --------- Todo Routes ----------
 // --------------------------------
@@ -57,7 +60,7 @@ app.post('/todos', authenticate, (req, res) => {
 app.get('/todos', authenticate, (req, res) => {
 	Todo.find({ _author: req.user._id })
 		.then(todos => {
-			res.status(200).send(todos);
+			res.status(200).send(removeAuthor(todos));
 		})
 		.catch(err => {
 			res.status(400).send(err);

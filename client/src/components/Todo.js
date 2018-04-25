@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import { editTodo } from '../actions/todo';
+import { editTodo, deleteTodo } from '../actions/todo';
 
 const Li = styled.li`
 	list-style: none;
@@ -113,6 +113,21 @@ class Todo extends React.Component {
 			});
 	};
 
+	onDeleteTodo = () => {
+		fetch(`/todos/${this.props.id}`, {
+			method: 'DELETE',
+			headers: new Headers({
+				'content-type': 'application/json',
+				'x-auth': localStorage.getItem('token'),
+			}),
+		})
+			.then(res => res.json())
+			.then(todo => {
+				this.props.dispatch(deleteTodo(todo._id));
+			})
+			.catch(err => console.log(err));
+	};
+
 	render() {
 		return (
 			<Li completed={this.state.completed}>
@@ -122,7 +137,9 @@ class Todo extends React.Component {
 				{this.props.text}
 				<div>
 					<button disabled={this.state.completed}>edit</button>
-					<button disabled={this.state.completed}>delete</button>
+					<button disabled={this.state.completed} onClick={this.onDeleteTodo}>
+						delete
+					</button>
 				</div>
 			</Li>
 		);
