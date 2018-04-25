@@ -78,6 +78,33 @@ const Form = styled.form`
 	}
 `;
 
+const P = styled.p`
+	font-size: 1.2rem;
+	background-color: #f28e8e;
+	color: #ffffff;
+	padding: 1.5rem;
+	text-align: center;
+	border-radius: 0.4rem;
+	width: 30rem;
+	margin: 0 auto -5rem auto;
+	position: relative;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 10%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 0;
+		border: 2rem solid transparent;
+		border-top-color: #f28e8e;
+		border-bottom: 0;
+		margin-bottom: -2.2rem;
+	}
+`;
+
 class TodoForm extends React.Component {
 	state = {
 		fields: {
@@ -98,7 +125,9 @@ class TodoForm extends React.Component {
 	validateForm = () => {
 		const err = {};
 		const fields = { ...this.state.fields };
-		!fields.text ? (err['text'] = 'Add todo before sending form.') : false;
+		if (!fields.text) {
+			err['text'] = 'Add todo before sending form.';
+		}
 		return err;
 	};
 
@@ -133,7 +162,7 @@ class TodoForm extends React.Component {
 		return (
 			<React.Fragment>
 				<Form action="#" onSubmit={this.onSubmitForm}>
-					{this.state.errFields.text && <p>{this.state.errFields.text}</p>}
+					{this.state.errFields.text && <P>{this.state.errFields.text}</P>}
 					<input
 						type="text"
 						value={this.state.fields.text}

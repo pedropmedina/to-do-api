@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Li = styled.li`
 	list-style: none;
@@ -12,19 +12,63 @@ const Li = styled.li`
 	align-items: center;
 	flex-wrap: wrap;
 	color: #939393;
+	${props =>
+		props.completed &&
+		css`
+			opacity: 0.3;
+			transform: scale(0.99);
+		`};
+
+	> label {
+		margin: 0 1.5rem 0 0.5rem;
+		position: relative;
+		display: block;
+		height: 2rem;
+		width: 2rem;
+		border: 0.2rem solid #939393;
+		border-radius: 50%;
+
+		&::after {
+			content: '';
+			display: block;
+			width: 1rem;
+			height: 1rem;
+			background-color: ${props =>
+				props.completed ? '#939393' : 'transparent'};
+			border-radius: 50%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		> input {
+			visibility: hidden;
+		}
+	}
 
 	> div {
 		margin-left: auto;
 
-		> span {
+		> button {
+			border: none;
 			display: inline-block;
+			font-size: 1.6rem;
+			color: #939393;
+			letter-spacing: 0.1rem;
 			padding: 1rem 2rem;
 			background-color: #eee;
 			height: 100%;
-			cursor: pointer;
+			cursor: ${props => (props.completed ? 'not-allowed' : 'pointer')};
+			outline: none;
 
 			&:first-child {
 				border-right: 0.1rem solid #cccccc;
+			}
+
+			&:active {
+				background-color: #ddd;
+				color: #fff;
 			}
 		}
 	}
@@ -34,52 +78,48 @@ const Li = styled.li`
 	}
 `;
 
-const Label = styled.label`
-	margin: 0 1.5rem 0 0.5rem;
-	position: relative;
-	display: block;
-	height: 2rem;
-	width: 2rem;
-	border: 0.2rem solid #939393;
-	border-radius: 50%;
-
-	&::after {
-		content: '';
-		display: block;
-		width: 1rem;
-		height: 1rem;
-		background-color: ${props => (props.completed ? '#939393' : 'transparent')};
-		border-radius: 50%;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
-
-	> input {
-		visibility: hidden;
-	}
-`;
-
 class Todo extends React.Component {
 	state = {
-		completed: false,
+		completed: this.props.completed || false,
 	};
 
 	onToggleCompleted = () => {
-		this.setState(() => ({ completed: !this.state.completed }));
+		const completed = !this.state.completed;
+		this.setState(() => ({ completed }));
+
+		fetch(`/todos/${this.props.id}`, {
+			method: 'PATCH',
+			headers: new Headers({
+				'x-auth': localStorage.getItem('token'),
+				'content-type': 'application/json',
+			}),
+			body: JSON.stringify({
+				text: this.props.text,
+				completed: completed,
+				createdAt: this.props.createdAt,
+			}),
+		})
+			.then(res => {
+				return res.json();
+			})
+			.then(todo => {
+				console.log(todo);
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	};
 
 	render() {
 		return (
-			<Li>
-				<Label completed={this.state.completed}>
+			<Li completed={this.state.completed}>
+				<label>
 					<input type="checkbox" onChange={this.onToggleCompleted} />
-				</Label>
+				</label>
 				{this.props.text}
 				<div>
-					<span>edit</span>
-					<span>delete</span>
+					<button disabled={this.state.completed}>edit</button>
+					<button disabled={this.state.completed}>delete</button>
 				</div>
 			</Li>
 		);

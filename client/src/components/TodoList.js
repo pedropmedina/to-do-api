@@ -23,6 +23,7 @@ const TodoList = props => {
 					return (
 						<Todo
 							key={todo._id}
+							id={todo._id}
 							text={todo.text}
 							completed={todo.completed}
 							createdAt={todo.createdAt}
