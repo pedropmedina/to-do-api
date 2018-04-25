@@ -46,9 +46,10 @@ const Form = styled.form`
 		border: none;
 		background-color: #f9f9f9;
 		border-bottom: 0.5rem solid #eaeaea;
+		outline: none;
 
 		&::placeholder {
-			color: #aaaaaa;
+			color: #cecece;
 			font-style: italic;
 		}
 	}
@@ -83,6 +84,7 @@ class TodoForm extends React.Component {
 			text: '',
 			completed: false,
 		},
+		errFields: {},
 	};
 
 	onChangeInput = e => {
@@ -93,8 +95,20 @@ class TodoForm extends React.Component {
 		this.setState(() => ({ fields }));
 	};
 
+	validateForm = () => {
+		const err = {};
+		const fields = { ...this.state.fields };
+		!fields.text ? (err['text'] = 'Add todo before sending form.') : false;
+		return err;
+	};
+
 	onSubmitForm = e => {
 		e.preventDefault();
+
+		// check text field is not empty
+		const errFields = this.validateForm();
+		this.setState(() => ({ errFields }));
+		if (Object.keys(errFields).length) return;
 
 		fetch('/todos', {
 			method: 'POST',
@@ -109,6 +123,8 @@ class TodoForm extends React.Component {
 			})
 			.then(todo => {
 				this.props.dispatch(addTodo(todo));
+				const fields = { text: '', completed: false };
+				this.setState(() => ({ fields }));
 			})
 			.catch(err => console.log(err));
 	};
@@ -117,11 +133,12 @@ class TodoForm extends React.Component {
 		return (
 			<React.Fragment>
 				<Form action="#" onSubmit={this.onSubmitForm}>
+					{this.state.errFields.text && <p>{this.state.errFields.text}</p>}
 					<input
 						type="text"
 						value={this.state.fields.text}
 						name="text"
-						placeholder="add todo"
+						placeholder="Add todo here (e.g., wash clothes)."
 						onChange={this.onChangeInput}
 					/>
 					<div>

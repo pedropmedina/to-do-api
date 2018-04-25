@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 `;
 
 const Ul = styled.ul`
-	width: 50rem;
+	width: 70rem;
 	padding: 2rem;
 `;
 
