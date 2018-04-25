@@ -14,3 +14,14 @@ export const addTodo = ({
 	type: 'ADD_TODO',
 	todo: { _id, text, completed, createdAt },
 });
+
+// EDIT_TODO
+export const editTodo = ({
+	_id = '',
+	text = '',
+	completed = false,
+	createdAt = '',
+} = {}) => ({
+	type: 'EDIT_TODO',
+	todo: { _id, text, completed, createdAt },
+});

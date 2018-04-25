@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { connect } from 'react-redux';
+import { editTodo } from '../actions/todo';
 
 const Li = styled.li`
 	list-style: none;
@@ -103,6 +105,7 @@ class Todo extends React.Component {
 				return res.json();
 			})
 			.then(todo => {
+				this.props.dispatch(editTodo(todo));
 				console.log(todo);
 			})
 			.catch(err => {
@@ -126,4 +129,4 @@ class Todo extends React.Component {
 	}
 }
 
-export default Todo;
+export default connect()(Todo);

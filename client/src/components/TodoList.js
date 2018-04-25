@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Todo from './Todo';
+import sortCompleted from '../utils/sortCompleted';
 
 const Wrapper = styled.div`
 	display: flex;
@@ -37,7 +38,7 @@ const TodoList = props => {
 
 const mapStateToProps = state => {
 	return {
-		todos: state,
+		todos: sortCompleted(state),
 	};
 };
 

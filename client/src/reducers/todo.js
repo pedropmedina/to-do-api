@@ -6,6 +6,13 @@ export default (state = todosReducerDefaultState, action) => {
 			return [...state, ...action.todos];
 		case 'ADD_TODO':
 			return [...state, action.todo];
+		case 'EDIT_TODO':
+			return state.map(todo => {
+				if (todo._id === action.todo._id) {
+					return { ...todo, ...action.todo };
+				}
+				return todo;
+			});
 		default:
 			return state;
 	}
