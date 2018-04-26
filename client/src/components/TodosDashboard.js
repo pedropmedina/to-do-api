@@ -6,6 +6,7 @@ import TodoForm from './TodoForm';
 
 class TodosDashboard extends Component {
 	componentDidMount() {
+		this.props.handleIsAuth(this.props.location.pathname);
 		this.fetchTodos();
 	}
 

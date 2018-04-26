@@ -1,17 +1,23 @@
 import React from 'react';
 import TodoForm from './TodoForm';
 
-const TodoEdit = props => {
-	return (
-		<React.Fragment>
-			<TodoForm
-				text={props.location.state.text}
-				completed={props.location.state.completed}
-				editable={props.location.state.editable}
-				id={props.location.state.id}
-			/>
-		</React.Fragment>
-	);
-};
+class TodoEdit extends React.Component {
+	componentDidMount() {
+		this.props.handleIsAuth(this.props.location.pathname);
+	}
+
+	render() {
+		return (
+			<React.Fragment>
+				<TodoForm
+					text={this.props.location.state.text}
+					completed={this.props.location.state.completed}
+					editable={this.props.location.state.editable}
+					id={this.props.location.state.id}
+				/>
+			</React.Fragment>
+		);
+	}
+}
 
 export default TodoEdit;

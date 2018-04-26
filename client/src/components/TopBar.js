@@ -56,10 +56,10 @@ class TopBar extends React.Component {
 			}),
 		})
 			.then(() => {
-				this.props.history.push('/');
 				this.setState(() => ({
 					showOptions: !this.state.showOptions,
 				}));
+				this.props.history.push('/');
 				console.log('successfully logged out');
 			})
 			.catch(err => console.log(err));

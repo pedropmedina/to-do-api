@@ -1,5 +1,13 @@
 import React from 'react';
 
-const PageNotFound = () => <div>404</div>;
+class PageNotFound extends React.Component {
+	componentDidMount() {
+		this.props.handleIsAuth(this.props.location.pathname);
+	}
+
+	render() {
+		return <div>404</div>;
+	}
+}
 
 export default PageNotFound;

@@ -54,6 +54,10 @@ class Login extends React.Component {
 		},
 	};
 
+	componentDidMount() {
+		this.props.handleIsAuth(this.props.location.pathname);
+	}
+
 	onChangeInput = e => {
 		const name = e.target.name;
 		const val = e.target.value;
