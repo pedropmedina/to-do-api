@@ -113,7 +113,7 @@ class SignUp extends React.Component {
 					<button>Sign up</button>
 
 					<span>
-						Have an account? <CustomLink to="/login">Login →</CustomLink>
+						Have an account? <CustomLink to="/">Login →</CustomLink>
 					</span>
 				</Form>
 			</React.Fragment>

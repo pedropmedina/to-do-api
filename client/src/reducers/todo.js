@@ -17,6 +17,8 @@ export default (state = todosReducerDefaultState, action) => {
 			return state.filter(todo => {
 				return todo._id !== action.id;
 			});
+		case 'REMOVE_TODOS':
+			return [];
 		default:
 			return state;
 	}

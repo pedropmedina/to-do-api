@@ -1,7 +1,8 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import { addTodo } from '../actions/todo';
+import { withRouter } from 'react-router-dom';
+import { addTodo, editTodo } from '../actions/todo';
 
 const Form = styled.form`
 	width: 70rem;
@@ -165,10 +166,11 @@ const P = styled.p`
 class TodoForm extends React.Component {
 	state = {
 		fields: {
-			text: '',
-			completed: false,
+			text: this.props.text || '',
+			completed: this.props.completed || false,
 		},
 		errFields: {},
+		editable: this.props.editable || false,
 	};
 
 	onChangeInput = e => {
@@ -196,14 +198,7 @@ class TodoForm extends React.Component {
 		return err;
 	};
 
-	onSubmitForm = e => {
-		e.preventDefault();
-
-		// check text field is not empty
-		const errFields = this.validateForm();
-		this.setState(() => ({ errFields }));
-		if (Object.keys(errFields).length) return;
-
+	onAddTodo = () => {
 		fetch('/todos', {
 			method: 'POST',
 			body: JSON.stringify(this.state.fields),
@@ -221,6 +216,40 @@ class TodoForm extends React.Component {
 				this.setState(() => ({ fields }));
 			})
 			.catch(err => console.log(err));
+	};
+
+	onEditTodo = () => {
+		fetch(`/todos/${this.props.id}`, {
+			method: 'PATCH',
+			body: JSON.stringify(this.state.fields),
+			headers: new Headers({
+				'content-type': 'application/json',
+				'x-auth': localStorage.getItem('token'),
+			}),
+		})
+			.then(res => res.json())
+			.then(todo => {
+				this.props.dispatch(editTodo(todo));
+				const fields = { text: '', completed: false };
+				this.setState(() => ({ fields, editable: false }));
+				this.props.history.push('/todosDashboard');
+			})
+			.catch(err => console.log(err));
+	};
+
+	onSubmitForm = e => {
+		e.preventDefault();
+
+		// check text field is not empty
+		const errFields = this.validateForm();
+		this.setState(() => ({ errFields }));
+		if (Object.keys(errFields).length) return;
+
+		if (!this.state.editable) {
+			return this.onAddTodo();
+		}
+
+		this.onEditTodo();
 	};
 
 	render() {
@@ -269,4 +298,5 @@ class TodoForm extends React.Component {
 	}
 }
 
-export default connect()(TodoForm);
+const TodoFormWithRouter = withRouter(TodoForm);
+export default connect()(TodoFormWithRouter);

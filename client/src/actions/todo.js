@@ -31,3 +31,8 @@ export const deleteTodo = id => ({
 	type: 'DELETE_TODO',
 	id,
 });
+
+// REMOVE_TODOS
+export const removeTodos = () => ({
+	type: 'REMOVE_TODOS',
+});

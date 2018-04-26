@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setTodos } from '../actions/todo';
-import TopBar from './TopBar';
+import { setTodos, removeTodos } from '../actions/todo';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 
 class TodosDashboard extends Component {
 	componentDidMount() {
 		this.fetchTodos();
+	}
+
+	componentWillUnmount() {
+		this.props.dispatch(removeTodos());
 	}
 
 	fetchTodos = () => {
@@ -29,7 +32,6 @@ class TodosDashboard extends Component {
 	render() {
 		return (
 			<div>
-				<TopBar />
 				<TodoForm />
 				<TodoList />
 			</div>

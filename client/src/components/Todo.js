@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { editTodo, deleteTodo } from '../actions/todo';
+import { withRouter } from 'react-router-dom';
 
 const Li = styled.li`
 	list-style: none;
@@ -128,6 +129,18 @@ class Todo extends React.Component {
 			.catch(err => console.log(err));
 	};
 
+	onEditTodo = () => {
+		return this.props.history.push({
+			pathname: `/editTodo/${this.props.id}`,
+			state: {
+				text: this.props.text,
+				completed: this.props.completed,
+				editable: true,
+				id: this.props.id,
+			},
+		});
+	};
+
 	render() {
 		return (
 			<Li completed={this.state.completed}>
@@ -136,7 +149,9 @@ class Todo extends React.Component {
 				</label>
 				{this.props.text}
 				<div>
-					<button disabled={this.state.completed}>edit</button>
+					<button disabled={this.state.completed} onClick={this.onEditTodo}>
+						edit
+					</button>
 					<button disabled={this.state.completed} onClick={this.onDeleteTodo}>
 						delete
 					</button>
@@ -146,4 +161,5 @@ class Todo extends React.Component {
 	}
 }
 
-export default connect()(Todo);
+const TodoWithRouter = withRouter(Todo);
+export default connect()(TodoWithRouter);

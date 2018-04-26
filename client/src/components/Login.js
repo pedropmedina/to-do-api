@@ -111,7 +111,7 @@ class Login extends React.Component {
 					<button>Login</button>
 
 					<span>
-						Need an account? <CustomLink to="/">Sign up →</CustomLink>
+						Need an account? <CustomLink to="/signUp">Sign up →</CustomLink>
 					</span>
 				</Form>
 			</React.Fragment>
