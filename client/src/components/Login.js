@@ -19,6 +19,7 @@ const Form = styled.form`
 		height: 5rem;
 		font-size: 1.6rem;
 		text-indent: 1rem;
+		outline: none;
 	}
 
 	> button {
@@ -52,11 +53,10 @@ const ErrorMessage = styled.p`
 	color: #ffffff;
 	padding: 1.5rem;
 	text-align: center;
-	border-radius: 0.4rem;
+	border-radius: 0.4rem 0.4rem 0 0;
 	width: 100%;
-	/* margin-bottom: 1rem; */
+	margin-bottom: -0.1rem;
 	position: relative;
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
 	&::after {
 		content: '';

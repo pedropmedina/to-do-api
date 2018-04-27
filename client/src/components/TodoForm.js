@@ -136,17 +136,16 @@ const Form = styled.form`
 	}
 `;
 
-const P = styled.p`
+const ErrorMessage = styled.p`
 	font-size: 1.2rem;
 	background-color: #f28e8e;
 	color: #ffffff;
 	padding: 1.5rem;
 	text-align: center;
-	border-radius: 0.4rem;
-	width: 30rem;
-	margin: 0 auto -5rem auto;
+	border-radius: 0.4rem 0.4rem 0 0;
+	width: 100%;
 	position: relative;
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+	margin-bottom: 0 !important;
 
 	&::after {
 		content: '';
@@ -260,7 +259,9 @@ class TodoForm extends React.Component {
 					onSubmit={this.onSubmitForm}
 					completed={this.state.fields.completed}
 				>
-					{this.state.errFields.text && <P>{this.state.errFields.text}</P>}
+					{this.state.errFields.text && (
+						<ErrorMessage>{this.state.errFields.text}</ErrorMessage>
+					)}
 					<input
 						type="text"
 						value={this.state.fields.text}
