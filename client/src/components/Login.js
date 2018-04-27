@@ -46,6 +46,33 @@ const CustomLink = styled(Link)`
 	color: #3d69af;
 `;
 
+const ErrorMessage = styled.p`
+	font-size: 1.2rem;
+	background-color: #f28e8e;
+	color: #ffffff;
+	padding: 1.5rem;
+	text-align: center;
+	border-radius: 0.4rem;
+	width: 100%;
+	/* margin-bottom: 1rem; */
+	position: relative;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 10%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0;
+		height: 0;
+		border: 2rem solid transparent;
+		border-top-color: #f28e8e;
+		border-bottom: 0;
+		margin-bottom: -2.2rem;
+	}
+`;
+
 class Login extends React.Component {
 	state = {
 		fields: {
@@ -116,6 +143,9 @@ class Login extends React.Component {
 		return (
 			<React.Fragment>
 				<Form action="#" onSubmit={this.onLogin}>
+					{this.state.errFields.email && (
+						<ErrorMessage>{this.state.errFields.email}</ErrorMessage>
+					)}
 					<input
 						type="text"
 						name="email"
@@ -123,7 +153,10 @@ class Login extends React.Component {
 						placeholder="email"
 						onChange={this.onChangeInput}
 					/>
-					{this.state.errFields.email && <p>{this.state.errFields.email}</p>}
+
+					{this.state.errFields.password && (
+						<ErrorMessage>{this.state.errFields.password}</ErrorMessage>
+					)}
 					<input
 						type="password"
 						name="password"
@@ -131,9 +164,7 @@ class Login extends React.Component {
 						placeholder="password"
 						onChange={this.onChangeInput}
 					/>
-					{this.state.errFields.password && (
-						<p>{this.state.errFields.password}</p>
-					)}
+
 					<button>Login</button>
 
 					<span>
