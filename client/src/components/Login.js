@@ -52,6 +52,7 @@ class Login extends React.Component {
 			email: '',
 			password: '',
 		},
+		errFields: {},
 	};
 
 	componentDidMount() {
@@ -66,8 +67,25 @@ class Login extends React.Component {
 		this.setState(() => ({ fields }));
 	};
 
+	validateFields = () => {
+		const { email, password } = this.state.fields;
+		const err = {};
+		if (!email) {
+			err['email'] = 'Email is required';
+		}
+		if (!password) {
+			err['password'] = 'Password is required';
+		}
+		return err;
+	};
+
 	onLogin = e => {
 		e.preventDefault();
+
+		const errFields = this.validateFields();
+		if (Object.keys(errFields).length) {
+			return this.setState(() => ({ errFields }));
+		}
 
 		fetch('/users/login', {
 			method: 'POST',
@@ -105,6 +123,7 @@ class Login extends React.Component {
 						placeholder="email"
 						onChange={this.onChangeInput}
 					/>
+					{this.state.errFields.email && <p>{this.state.errFields.email}</p>}
 					<input
 						type="password"
 						name="password"
@@ -112,6 +131,9 @@ class Login extends React.Component {
 						placeholder="password"
 						onChange={this.onChangeInput}
 					/>
+					{this.state.errFields.password && (
+						<p>{this.state.errFields.password}</p>
+					)}
 					<button>Login</button>
 
 					<span>
