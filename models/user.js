@@ -86,12 +86,12 @@ userSchema.statics.findByCredentials = function(email, password) {
 
 	return User.findOne({ email }).then(user => {
 		if (!user) {
-			return Promise.reject();
+			return Promise.reject(Error('email does not exists!'));
 		}
 
 		return bcrypt.compare(password, user.password).then(res => {
 			if (res !== true) {
-				return Promise.reject();
+				return Promise.reject(Error('incorrect password'));
 			}
 			return user;
 		});

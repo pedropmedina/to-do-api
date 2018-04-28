@@ -183,7 +183,8 @@ app.post('/users/login', (req, res) => {
 				.send();
 		})
 		.catch(err => {
-			res.status(400).send();
+			res.send({ err: 'This is an error from the back' });
+			res.status(400).end();
 		});
 });
 

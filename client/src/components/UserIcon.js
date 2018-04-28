@@ -36,6 +36,7 @@ const Wrapper = styled.div`
 		color: #fefefe;
 		font-size: 1.2rem;
 		visibility: hidden;
+		cursor: pointer;
 
 		${props =>
 			props.showOptions &&

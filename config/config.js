@@ -17,12 +17,12 @@ if (env === 'development') {
 	// set the PORT
 	process.env.PORT = 3001;
 	// set MONGODB_URI
-	process.env.MONGODB_URI = 'mongodb://localhost:3001/TodoApp';
+	process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp';
 } else if (env === 'test') {
 	// set the PORT
 	process.env.PORT = 3001;
 	// set MONGODB_URI
-	process.env.MONGO_URI = 'mongodb://localhost:3001/TodoAppTest';
+	process.env.MONGO_URI = 'mongodb://localhost:27017/TodoAppTest';
 }
 
 */

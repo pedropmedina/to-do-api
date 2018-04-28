@@ -122,6 +122,9 @@ class Login extends React.Component {
 			},
 		})
 			.then(res => {
+				if (!res.ok) {
+					return Promise.reject();
+				}
 				return res.headers.get('x-auth');
 			})
 			.then(token => {
